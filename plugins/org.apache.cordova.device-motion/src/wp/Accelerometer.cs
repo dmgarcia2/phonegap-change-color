@@ -1,10 +1,10 @@
-/*
+﻿/*  
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
 	You may obtain a copy of the License at
-
+	
 	http://www.apache.org/licenses/LICENSE-2.0
-
+	
 	Unless required by applicable law or agreed to in writing, software
 	distributed under the License is distributed on an "AS IS" BASIS,
 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -98,7 +98,7 @@ namespace WPCordovaClassLib.Cordova.Commands
 
         /// <summary>
         /// Sensor listener event
-        /// </summary>
+        /// </summary>        
         private void accelerometer_CurrentValueChanged(object sender, SensorReadingEventArgs<AccelerometerReading> e)
         {
             this.SetStatus(Running);
@@ -175,7 +175,7 @@ namespace WPCordovaClassLib.Cordova.Commands
             // convert to unix timestamp
             // long timestamp = ((accelerometer.CurrentValue.Timestamp.DateTime - StartOfEpoch).Ticks) / 10000;
             // Note: Removed timestamp, to let the JS side create it using (new Date().getTime()) -jm
-            // this resolves an issue with inconsistencies between JS dates and Native DateTime
+            // this resolves an issue with inconsistencies between JS dates and Native DateTime 
             string resultCoordinates = String.Format("\"x\":{0},\"y\":{1},\"z\":{2}",
                             (accelerometer.CurrentValue.Acceleration.X * gConstant).ToString("0.00000", CultureInfo.InvariantCulture),
                             (accelerometer.CurrentValue.Acceleration.Y * gConstant).ToString("0.00000", CultureInfo.InvariantCulture),

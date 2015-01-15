@@ -1,10 +1,10 @@
 "use strict";
 
+var watchID = null;
+
 var application = {};
 
 application.app = {
-
-    watchID: null,
 
     initialize: function() {
         document.addEventListener('deviceready', application.app.onDeviceReady, false);
@@ -16,21 +16,21 @@ application.app = {
     },
 
     startWatch: function() {
-        if (application.app.watchID == null) {
-            options = { frequency : 1000 };
-            application.app.watchID =
-                navigator.accelerometer.watchAcceleration(application.app.onSuccess,
-                                                          application.app.onError,
-                                                          options);
+        if (watchID == null) {
+            var options = { frequency : 250 };
+            watchID = navigator.accelerometer.watchAcceleration(application.app.onSuccess,
+                                                                application.app.onError,
+                                                                options);
         }
     },
 
     stopWatch: function() {
         $('#accelerometer').html('Detenido');
 
-        if (application.app.watchID !== null) {
-            navigator.accelerometer.stopWatch(application.app.watchID);
-            application.app.watchID = null;
+        if (watchID != null) {
+            navigator.accelerometer.clearWatch(watchID);
+            watchID = null;
+            $('#box1').css("background-color", "#fff");
         }
     },
 
@@ -39,6 +39,32 @@ application.app = {
                                  'Acceleration Y: ' + acceleration.y + '<br/>' +
                                  'Acceleration Z: ' + acceleration.z + '<br/>' +
                                  'Timestamp: ' + acceleration.timestamp + '<br/>');
+        
+        var ax = Math.abs(acceleration.x),
+            ay = Math.abs(acceleration.y),
+            az = Math.abs(acceleration.z),
+            radToDegrees = 180 / Math.PI;
+
+        var tiltX = Math.atan(ax / Math.sqrt(Math.pow(ay, 2) + Math.pow(az, 2))) * radToDegrees,
+            tiltY = Math.atan(ay / Math.sqrt(Math.pow(ax, 2) + Math.pow(az, 2))) * radToDegrees,
+            tiltZ = Math.atan(Math.sqrt(Math.pow(ay, 2) + Math.pow(ax, 2)) / az) * radToDegrees;
+        
+        var ratio = 127 / 359,
+            red = Math.round(tiltX * ratio) + 168,
+            green = Math.round(tiltY * ratio) + 168,
+            blue = Math.round(tiltZ * ratio) + 168;
+
+        if (red == 256) {
+            red = 128;
+        }
+        if (green == 256) {
+            green = 128;
+        }
+        if (blue == 256) {
+            blue = 128;
+        }
+
+        $('#box1').css("background-color", "rgb(" + red + ", " + green + ", " + blue + ")");
     },
 
     onError: function() {
